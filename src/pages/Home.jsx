@@ -1,10 +1,16 @@
+import { useEffect, useState } from "react"
+
 function Home() {
-    
-  const posts = [
-    { id: 1, title: "Bài viết đầu tiên", content: "Đây là nội dung ngắn của bài viết số 1..." },
-    { id: 2, title: "Chia sẻ về React Router", content: "React Router giúp chúng ta quản lý page dễ dàng hơn..." },
-    { id: 3, title: "Học NodeJS", content: "NodeJS là nền tảng chạy JavaScript phía server..." },
-  ]
+
+  const [posts, setPosts] = useState([])
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/posts")
+      .then(res => res.json())
+      .then(data => {
+        setPosts(data)
+      })
+  }, [])
 
   return (
     <div>
