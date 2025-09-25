@@ -1,40 +1,69 @@
-import { useState } from "react"
+import { useState } from "react";
+import API from "../api";
 
 function Register() {
-    const [username, setUsername] = useState("")
-    const [email, setEmail] = useState("")
-    const [displayName, setDisplayName] = useState("")
-    const [password, setPassword] = useState("")
-    const [message, setMessage] = useState("")
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    display_name: "",
+    password: "",
+  });
+  const [message, setMessage] = useState("");
 
-    const handleRegister = async (e) => {
-        e.preventDefault()
-        const res = await fetch("http://localhost:5000/api/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, email, displayName, password })
-        })
-        const data = await res.json()
-        setMessage(data.message)
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await API.post("/register", form);
+      setMessage(res.data.message);
+    } catch (err) {
+      if (err.response) {
+        setMessage(err.response.data.message || "Đăng ký lỗi!");
+      }
     }
+  };
 
-    return (
-        <div>
-            <h2>Đăng ký</h2>
-            <form onSubmit={handleRegister}>
-                <input placeholder="Tên tài khoản" value={username} onChange={e => setUsername(e.target.value)} />
-                <br />
-                <input placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
-                <br />
-                <input placeholder="Tên hiển thị" value={displayName} onChange={e => setDisplayName(e.target.value)} />
-                <br />
-                <input type="password" placeholder="Mật khẩu" value={password} onChange={e => setPassword(e.target.value)} />
-                <br />
-                <button type="submit">Đăng ký</button>
-            </form>
-            {message && <p>{message}</p>}
-        </div>
-    )
+  return (
+    <div>
+      <h2>Đăng ký</h2>
+      <form onSubmit={handleSubmit}>
+        <input
+          placeholder="Tên tài khoản"
+          name="name"
+          value={form.name}
+          onChange={handleChange}
+        />
+        <br />
+        <input
+          placeholder="Email"
+          name="email"
+          value={form.email}
+          onChange={handleChange}
+        />
+        <br />
+        <input
+          placeholder="Tên hiển thị"
+          name="display_name"
+          value={form.display_name}
+          onChange={handleChange}
+        />
+        <br />
+        <input
+          type="password"
+          placeholder="Mật khẩu"
+          name="password"
+          value={form.password}
+          onChange={handleChange}
+        />
+        <br />
+        <button type="submit">Đăng ký</button>
+      </form>
+      {message && <p>{message}</p>}
+    </div>
+  );
 }
 
-export default Register
+export default Register;
