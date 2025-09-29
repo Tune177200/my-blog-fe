@@ -29,27 +29,52 @@ function Login() {
   };
 
   return (
-    <div>
-      <h2>Đăng nhập</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          placeholder="Email hoặc tên tài khoản"
-          name="login"
-          value={form.login}
-          onChange={handleChange}
-        />
-        <br />
-        <input
-          type="password"
-          placeholder="Mật khẩu"
-          name="password"
-          value={form.password}
-          onChange={handleChange}
-        />
-        <br />
-        <button type="submit">Đăng nhập</button>
-      </form>
-      {message && <p>{message}</p>}
+    <div className="d-flex justify-content-center align-items-center min-vh-100 bg-light">
+      <div className="card shadow-lg p-4" style={{ maxWidth: "400px", width: "100%" }}>
+        <h2 className="text-center text-primary mb-4">Đăng nhập</h2>
+
+        {message && (
+          <div className="alert alert-danger text-center">{message}</div>
+        )}
+
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label className="form-label">Email hoặc tên tài khoản</label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Nhập email hoặc tên tài khoản"
+              name="login"
+              value={form.login}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="form-label">Mật khẩu</label>
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Nhập mật khẩu"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <button type="submit" className="btn btn-primary w-100 mb-3">
+            Đăng nhập
+          </button>
+
+          <div className="text-center">
+            <small>
+              Chưa có tài khoản? <a href="/register">Đăng ký</a>
+            </small>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
