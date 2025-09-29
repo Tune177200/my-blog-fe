@@ -1,12 +1,18 @@
 import { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
+
 import API, { setAuthToken } from "../api";
 
 function Login() {
+  const navigate = useNavigate();
+  
   const [form, setForm] = useState({
     login: "",
     password: "",
   });
   const [message, setMessage] = useState("");
+
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -21,9 +27,18 @@ function Login() {
       const token = res.data.token;
       localStorage.setItem("token", token);
       setAuthToken(token);
+
+      setIsSuccess(true);
+      setTimeout(
+        () => {
+          navigate("/dashboard")
+        }, 1500
+      );
+
     } catch (err) {
       if (err.response) {
         setMessage(err.response.data.message || "Đăng nhập lỗi!");
+        setIsSuccess(true);
       }
     }
   };
@@ -34,7 +49,9 @@ function Login() {
         <h2 className="text-center text-primary mb-4">Đăng nhập</h2>
 
         {message && (
-          <div className="alert alert-danger text-center">{message}</div>
+          <div className={`alert ${isSuccess ? "alert-success" : "alert-danger"} text-center`}>
+            {message}
+          </div>
         )}
 
         <form onSubmit={handleSubmit}>

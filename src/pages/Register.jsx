@@ -1,7 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import API from "../api";
 
 function Register() {
+
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -9,6 +14,8 @@ function Register() {
     password: "",
   });
   const [message, setMessage] = useState("");
+
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -19,9 +26,19 @@ function Register() {
     try {
       const res = await API.post("/register", form);
       setMessage(res.data.message);
+
+      setIsSuccess(true); 
+
+      setTimeout(
+        () => {
+          navigate("/login");
+        }, 2000
+      );
+
     } catch (err) {
       if (err.response) {
         setMessage(err.response.data.message || "Đăng ký lỗi!");
+        setIsSuccess(false);
       }
     }
   };
@@ -32,7 +49,9 @@ function Register() {
         <h2 className="text-center text-primary mb-4">Đăng ký</h2>
 
         {message && (
-          <div className="alert alert-info text-center">{message}</div>
+          <div className={`alert ${isSuccess ? 'alert-success' : 'alert-danger'} text-center`}>
+            {message}
+          </div>
         )}
 
         <form onSubmit={handleSubmit}>
